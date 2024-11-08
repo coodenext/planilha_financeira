@@ -105,3 +105,4 @@ function getTransactions() {
 function saveTransactions(transactions) {
   localStorage.setItem("transactions", JSON.stringify(transactions));
 }
+

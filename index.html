@@ -1,36 +1,78 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adicionar Transações</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Transações</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        // Verifica se o usuário está logado
+        if (!localStorage.getItem("currentUser")) {
+            window.location.href = "login.html"; // Redireciona para o login se não houver usuário logado
+        }
+
+        // Função para obter transações de um usuário
+        function getTransactions() {
+            const currentUser = localStorage.getItem("currentUser");
+            return JSON.parse(localStorage.getItem(`transactions_${currentUser}`)) || [];
+        }
+
+        // Função para salvar transações no localStorage
+        function saveTransactions(transactions) {
+            const currentUser = localStorage.getItem("currentUser");
+            localStorage.setItem(`transactions_${currentUser}`, JSON.stringify(transactions));
+        }
+
+        // Função para adicionar transação
+        function addTransaction(isIncome) {
+            const description = document.getElementById("description").value;
+            const amount = parseFloat(document.getElementById("amount").value);
+            const date = new Date().toLocaleDateString();
+
+            if (description && !isNaN(amount)) {
+                const transaction = {
+                    description,
+                    amount: isIncome ? amount : -amount,
+                    type: isIncome ? "income" : "expense",
+                    date: date
+                };
+
+                const transactions = getTransactions();
+                transactions.push(transaction);
+                saveTransactions(transactions);
+
+                // Limpa os campos após adicionar
+                document.getElementById("description").value = "";
+                document.getElementById("amount").value = "";
+                alert("Transação adicionada com sucesso!");
+            } else {
+                alert("Por favor, preencha todos os campos corretamente.");
+            }
+        }
+    </script>
 </head>
 <body>
-  <div class="container">
-    <h2>Adicionar Despesas e Receitas</h2>
+    <div class="container">
+        <h2>Adicionar Despesas e Receitas</h2>
 
-    <div class="form-group">
-      <label for="description">Descrição</label>
-      <input type="text" id="description" placeholder="Ex: Salário, Aluguel, etc.">
+        <div class="form-group">
+            <label for="description">Descrição</label>
+            <input type="text" id="description" placeholder="Ex: Salário, Aluguel, etc.">
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Valor</label>
+            <input type="number" id="amount" placeholder="Digite o valor">
+        </div>
+
+        <div class="form-group">
+            <button onclick="addTransaction(true)">Adicionar Receita</button>
+            <button onclick="addTransaction(false)">Adicionar Despesa</button>
+        </div>
+
+        <div class="form-group">
+            <a href="summary.html" class="summary-button">Ver Resumo</a>
+        </div>
     </div>
-
-    <div class="form-group">
-      <label for="amount">Valor</label>
-      <input type="number" id="amount" placeholder="Digite o valor">
-    </div>
-
-    <div class="form-group">
-      <button onclick="addTransaction(true)">Adicionar Receita</button>
-      <button onclick="addTransaction(false)">Adicionar Despesa</button>
-    </div>
-
-    <div class="form-group">
-      <a href="summary.html" class="summary-button">Ver Resumo</a>
-    </div>
-  </div>
-
-  <script src="data.js"></script>
-  <script src="script.js"></script>
 </body>
 </html>

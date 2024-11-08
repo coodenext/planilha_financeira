@@ -6,23 +6,98 @@
     <title>Resumo de Despesas e Receitas</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Verifica se o usuário está logado
+        if (!localStorage.getItem("currentUser")) {
+            window.location.href = "login.html"; // Redireciona para o login se não houver usuário logado
+        }
+
+        // Função para obter transações de um usuário
+        function getTransactions() {
+            const currentUser = localStorage.getItem("currentUser");
+            return JSON.parse(localStorage.getItem(`transactions_${currentUser}`)) || [];
+        }
+
+        // Exibe as transações
+        function displayTransactions() {
+            const transactions = getTransactions();
+            const balance = transactions.reduce((acc, transaction) => acc + transaction.amount, 0);
+
+            // Atualiza o saldo
+            document.getElementById("balance").innerText = `Saldo Total: R$ ${balance.toFixed(2)}`;
+
+            const transactionsDiv = document.getElementById("transactions");
+            transactionsDiv.innerHTML = "";
+
+            if (transactions.length === 0) {
+                transactionsDiv.innerHTML = "<p>Sem transações registradas.</p>";
+                return;
+            }
+
+            transactions.forEach((transaction, index) => {
+                const transactionDiv = document.createElement("div");
+                transactionDiv.classList.add("transaction", transaction.type);
+                transactionDiv.innerHTML = `
+                    <span>${transaction.description}</span>
+                    <span>R$ ${transaction.amount.toFixed(2)}</span>
+                    <span>${transaction.date}</span>
+                    <button onclick="deleteTransaction(${index})">Excluir</button>
+                `;
+                transactionsDiv.appendChild(transactionDiv);
+            });
+
+            createChart(transactions);
+        }
+
+        // Função para excluir transação
+        function deleteTransaction(index) {
+            const transactions = getTransactions();
+            transactions.splice(index, 1);  // Remove a transação do array
+
+            const currentUser = localStorage.getItem("currentUser");
+            localStorage.setItem(`transactions_${currentUser}`, JSON.stringify(transactions));
+
+            displayTransactions();
+        }
+
+        // Função para criar gráfico
+        function createChart(transactions) {
+            const ctx = document.getElementById("transactionChart").getContext("2d");
+            new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: transactions.map(transaction => transaction.description),
+                    datasets: [{
+                        label: "Valor das Transações",
+                        data: transactions.map(transaction => Math.abs(transaction.amount)),
+                        backgroundColor: transactions.map(transaction =>
+                          transaction.type === "income" ? "rgba(46, 204, 113, 0.5)" : "rgba(231, 76, 60, 0.5)"
+                        ),
+                        borderColor: transactions.map(transaction =>
+                          transaction.type === "income" ? "rgba(46, 204, 113, 1)" : "rgba(231, 76, 60, 1)"
+                        ),
+                        borderWidth: 1
+                    }]
+                }
+            });
+        }
+
+        // Chama a função para exibir as transações
+        window.onload = displayTransactions;
+    </script>
 </head>
 <body>
-    <div id="content">
-        <h1>Resumo de Despesas e Receitas</h1>
-        <div id="balance"></div>
+    <div class="container">
+        <h2>Resumo de Despesas e Receitas</h2>
+        <p id="balance">Saldo Total: R$ 0.00</p>
 
-        <div id="transactions">
-            <p>Carregando transações...</p>
+        <div id="transactions"></div>
+
+        <canvas id="transactionChart" width="400" height="200"></canvas>
+
+        <div class="form-group">
+            <a href="index.html" class="summary-button">Adicionar Nova Transação</a>
         </div>
-
-        <div>
-            <canvas id="transactionChart" width="400" height="200"></canvas>
-        </div>
-
-        <!-- Modifiquei o código do botão para redirecionar corretamente para index.html -->
-        <button onclick="window.location.href = 'index.html';">Adicionar Nova Transação</button>
     </div>
-    <script src="summary.js"></script>
 </body>
 </html>

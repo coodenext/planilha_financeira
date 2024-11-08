@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+      // Função para verificar o login do usuário
+      function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        // Verifica se o usuário e a senha estão corretos
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+
+        const user = users.find(u => u.username === username && u.password === password);
+
+        if (user) {
+          localStorage.setItem("currentUser", username); // Salva o usuário logado
+          window.location.href = "index.html"; // Redireciona para a página principal
+        } else {
+          alert("Usuário ou senha incorretos");
+        }
+      }
+
+      // Função para registrar um novo usuário
+      function register() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (username && password) {
+          const users = JSON.parse(localStorage.getItem("users")) || [];
+          if (users.some(u => u.username === username)) {
+            alert("Usuário já registrado");
+          } else {
+            users.push({ username, password });
+            localStorage.setItem("users", JSON.stringify(users));
+            alert("Usuário registrado com sucesso!");
+          }
+        } else {
+          alert("Preencha todos os campos");
+        }
+      }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <div class="form-group">
+            <label for="username">Usuário:</label>
+            <input type="text" id="username" placeholder="Digite o nome de usuário">
+        </div>
+        <div class="form-group">
+            <label for="password">Senha:</label>
+            <input type="password" id="password" placeholder="Digite a senha">
+        </div>
+        <div class="form-group">
+            <button onclick="login()">Entrar</button>
+            <button onclick="register()">Registrar</button>
+        </div>
+    </div>
+</body>
+</html>
