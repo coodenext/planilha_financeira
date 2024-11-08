@@ -97,4 +97,34 @@ body {
   canvas {
     margin-top: 20px;
   }
+  button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 5px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .transaction button {
+    background-color: #ff9800;  /* Cor para editar */
+  }
+  
+  .transaction button:nth-child(2) {
+    background-color: #f44336;  /* Cor para excluir */
+  }
+  
+  .transaction button:hover {
+    background-color: #e65100; /* Hover para editar */
+  }
+  
+  .transaction button:nth-child(2):hover {
+    background-color: #d32f2f; /* Hover para excluir */
+  }
   

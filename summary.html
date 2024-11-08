@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resumo Financeiro</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo de Despesas e Receitas</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h2>Resumo de Despesas e Receitas</h2>
-    <div class="balance" id="balance">Saldo Total: R$ 0,00</div>
+    <div id="content">
+        <h1>Resumo de Despesas e Receitas</h1>
+        <div id="balance"></div>
 
-    <div class="transactions" id="transactions">Carregando transações...</div>
+        <div id="transactions">
+            <p>Carregando transações...</p>
+        </div>
 
-    <canvas id="transactionChart" width="400" height="200"></canvas>
+        <div>
+            <canvas id="transactionChart" width="400" height="200"></canvas>
+        </div>
 
-    <div class="form-group">
-      <a href="index.html" class="summary-button">Adicionar Nova Transação</a>
+        <!-- Modifiquei o código do botão para redirecionar corretamente para index.html -->
+        <button onclick="window.location.href = 'index.html';">Adicionar Nova Transação</button>
     </div>
-  </div>
-
-  <script src="data.js"></script>
-  <script src="summary.js"></script>
+    <script src="summary.js"></script>
 </body>
 </html>
