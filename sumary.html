@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resumo Financeiro</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Resumo de Despesas e Receitas</h2>
+
+    <div class="balance" id="balance">Saldo Total: R$ 0,00</div>
+
+    <div class="transactions" id="transactions"></div>
+
+    <canvas id="transactionChart" width="400" height="200"></canvas>
+
+    <div class="form-group">
+      <a href="index.html" class="summary-button">Adicionar Nova Transação</a>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="summary.js"></script>
+</body>
+</html>
