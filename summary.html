@@ -82,6 +82,12 @@
             });
         }
 
+        // Função de logoff
+        function logoff() {
+            localStorage.removeItem("currentUser"); // Remove o usuário logado
+            window.location.href = "login.html"; // Redireciona para a tela de login
+        }
+
         // Chama a função para exibir as transações
         window.onload = displayTransactions;
     </script>
@@ -97,6 +103,11 @@
 
         <div class="form-group">
             <a href="index.html" class="summary-button">Adicionar Nova Transação</a>
+        </div>
+
+        <!-- Botão de logoff -->
+        <div class="form-group">
+            <button onclick="logoff()">Sair</button>
         </div>
     </div>
 </body>
