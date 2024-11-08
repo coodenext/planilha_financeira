@@ -7,10 +7,13 @@ function addTransaction(isIncome) {
       return;
     }
   
+    const date = new Date().toLocaleDateString("pt-BR");  // Data no formato DD/MM/AAAA
+  
     const transaction = {
       description: description,
       amount: isIncome ? amount : -amount,
-      type: isIncome ? "income" : "expense"
+      type: isIncome ? "income" : "expense",
+      date: date
     };
   
     const transactions = getTransactions();

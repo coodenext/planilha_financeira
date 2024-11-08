@@ -1,11 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Recuperar transações do localStorage
   const transactions = getTransactions();
   let balance = transactions.reduce((acc, transaction) => acc + transaction.amount, 0);
 
+  // Atualiza o saldo
   function updateBalance() {
     document.getElementById("balance").innerText = `Saldo Total: R$ ${balance.toFixed(2)}`;
   }
 
+  // Exibe as transações
   function displayTransactions() {
     const transactionsDiv = document.getElementById("transactions");
     transactionsDiv.innerHTML = "";
@@ -15,17 +18,51 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    transactions.forEach(transaction => {
+    transactions.forEach((transaction, index) => {
       const transactionDiv = document.createElement("div");
       transactionDiv.classList.add("transaction", transaction.type);
       transactionDiv.innerHTML = `
         <span>${transaction.description}</span>
         <span>R$ ${transaction.amount.toFixed(2)}</span>
+        <span>${transaction.date}</span>
+        <button onclick="editTransaction(${index})">Editar</button>
+        <button onclick="deleteTransaction(${index})">Excluir</button>
       `;
       transactionsDiv.appendChild(transactionDiv);
     });
   }
 
+  // Editar transação
+  window.editTransaction = function (index) {
+    const transactions = getTransactions();
+    const transaction = transactions[index];
+
+    // Pedir novos valores para edição
+    const newDescription = prompt("Editar Descrição", transaction.description);
+    const newAmount = parseFloat(prompt("Editar Valor", transaction.amount));
+
+    if (newDescription && !isNaN(newAmount)) {
+      // Atualiza a transação com os novos valores
+      transaction.description = newDescription;
+      transaction.amount = newAmount;
+
+      // Atualiza no localStorage
+      saveTransactions(transactions);
+      displayTransactions();  // Atualiza a exibição das transações
+    }
+  };
+
+  // Excluir transação
+  window.deleteTransaction = function (index) {
+    const transactions = getTransactions();
+    transactions.splice(index, 1);  // Remove a transação do array
+
+    // Atualiza no localStorage
+    saveTransactions(transactions);
+    displayTransactions();  // Atualiza a exibição das transações
+  };
+
+  // Função para criar o gráfico
   function createChart() {
     const ctx = document.getElementById("transactionChart").getContext("2d");
     new Chart(ctx, {
@@ -54,7 +91,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Atualiza o saldo e exibe as transações
   updateBalance();
   displayTransactions();
   createChart();
 });
+
+// Funções auxiliares para acessar e salvar transações no localStorage
+function getTransactions() {
+  return JSON.parse(localStorage.getItem("transactions")) || [];
+}
+
+function saveTransactions(transactions) {
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+}
